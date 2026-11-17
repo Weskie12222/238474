@@ -40,6 +40,7 @@ public final class VillageReactions {
 			double danger = d.dangerRadius();
 			Set<BlockPos> bells = new HashSet<>();
 
+			// تم التأكد من استخدامEntityType.VILLAGER بالشكل الصحيح
 			for (LivingEntity v : level.getEntities(EntityType.VILLAGER, box, e -> true)) {
 				if (tick % 40 == 0) {
 					hide(level, v);
@@ -66,6 +67,7 @@ public final class VillageReactions {
 	/** A siren is wailing: every villager within {@code radius} blocks takes cover. */
 	public static void alertNear(ServerLevel level, BlockPos pos, double radius) {
 		AABB box = new AABB(pos).inflate(radius);
+		// تم التأكد من استخدامEntityType.VILLAGER بالشكل الصحيح هنا أيضاً
 		for (LivingEntity v : level.getEntities(EntityType.VILLAGER, box, e -> true)) {
 			hide(level, v);
 		}
