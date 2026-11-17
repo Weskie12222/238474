@@ -296,7 +296,7 @@ public final class DisasterManager {
 		if (r.nextInt(100) < 40) {
 			AABB box = new AABB(target.x - 160, overworld.getMinY(), target.z - 160,
 					target.x + 160, overworld.getMaxY(), target.z + 160);
-			List<LivingEntity> villagers = new ArrayList<>(overworld.getEntities(net.minecraft.world.entity.EntityType.VILLAGER, box, e -> true));
+			List<LivingEntity> villagers = new ArrayList<>(overworld.getEntities(EntityType.VILLAGER, box, e -> true));
 			if (!villagers.isEmpty()) {
 				target = villagers.get(r.nextInt(villagers.size())).position();
 			}
