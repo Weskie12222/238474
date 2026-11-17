@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.phys.AABB;
@@ -27,6 +27,16 @@ public final class VillageReactions {
 	private VillageReactions() {
 	}
 
+	/**
+	 * All villagers inside {@code box}. Matches on the entity type's registry id ("villager") instead of the
+	 * {@code EntityType.VILLAGER} constant / {@code Villager} class, whose names and packages have moved
+	 * between Minecraft versions.
+	 */
+	public static List<LivingEntity> villagersIn(ServerLevel level, AABB box) {
+		return level.getEntitiesOfClass(LivingEntity.class, box,
+				e -> BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).getPath().equals("villager"));
+	}
+
 	/** Called every second from the disaster manager. */
 	public static void tick(MinecraftServer server, List<Disaster> disasters, long tick) {
 		for (Disaster d : disasters) {
@@ -40,7 +50,7 @@ public final class VillageReactions {
 			double danger = d.dangerRadius();
 			Set<BlockPos> bells = new HashSet<>();
 
-			for (LivingEntity v : level.getEntities(EntityType.VILLAGER, box, e -> true)) {
+			for (LivingEntity v : villagersIn(level, box)) {
 				if (tick % 40 == 0) {
 					hide(level, v);
 				}
@@ -66,7 +76,7 @@ public final class VillageReactions {
 	/** A siren is wailing: every villager within {@code radius} blocks takes cover. */
 	public static void alertNear(ServerLevel level, BlockPos pos, double radius) {
 		AABB box = new AABB(pos).inflate(radius);
-		for (LivingEntity v : level.getEntities(EntityType.VILLAGER, box, e -> true)) {
+		for (LivingEntity v : villagersIn(level, box)) {
 			hide(level, v);
 		}
 	}

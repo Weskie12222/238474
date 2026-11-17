@@ -17,7 +17,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -296,7 +295,7 @@ public final class DisasterManager {
 		if (r.nextInt(100) < 40) {
 			AABB box = new AABB(target.x - 160, overworld.getMinY(), target.z - 160,
 					target.x + 160, overworld.getMaxY(), target.z + 160);
-			List<LivingEntity> villagers = new ArrayList<>(overworld.getEntities(EntityType.VILLAGER, box, e -> true));
+			List<LivingEntity> villagers = new ArrayList<>(VillageReactions.villagersIn(overworld, box));
 			if (!villagers.isEmpty()) {
 				target = villagers.get(r.nextInt(villagers.size())).position();
 			}
